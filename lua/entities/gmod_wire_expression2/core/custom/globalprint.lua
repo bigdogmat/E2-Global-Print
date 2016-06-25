@@ -161,12 +161,14 @@ __e2setcost(50)
 
 e2function void broadcastMessage(...)
   if not check_permission(self) then return end
+  if #typeids > 255 then return end
 
   send_color_print_VarArgs(self, nil, typeids, ...)
 end
 
 e2function void broadcastMessage(array args)
   if not check_permission(self) then return end
+  if #args > 255 then return end
 
   send_color_print_Array(self, nil, args)
 end
@@ -180,6 +182,7 @@ e2function void entity:printMessage(...)
   if not IsValid(this) then return end
   if not this:IsPlayer() then return end
   if not check_permission(self) then return end
+  if #typeids > 255 then return end
 
   send_color_print_VarArgs(self, this, typeids, ...)
 end
@@ -188,6 +191,7 @@ e2function void entity:printMessage(array args)
   if not IsValid(this) then return end
   if not this:IsPlayer() then return end
   if not check_permission(self) then return end
+  if #args > 255 then return end
 
   send_color_print_Array(self, this, args)
 end
