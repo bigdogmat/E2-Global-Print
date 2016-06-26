@@ -11,7 +11,7 @@ Permissions
 
 Default: 2
 -----------------------------------------------------------------------------]]
-local permissions = CreateConVar("globalprint_permissions", '2', bit.band(FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE), "Set who can send global messages")
+local permissions = CreateConVar("globalprint_permissions", '2', bit.bor(FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE), "Set who can send global messages")
 
 --[[---------------------------------------------------------------------------
 Checks players permission
