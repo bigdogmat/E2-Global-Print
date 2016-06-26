@@ -1,0 +1,6 @@
+{
+"title" : "[E2] Global Print",
+"type" : "servercontent",
+"tags" : "build",
+"ignore" : ["*.psd", "*.vcproj", ".git","*.jpeg", "*.md"]
+}
