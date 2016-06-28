@@ -38,7 +38,7 @@ Convert E2 types to strings or colors
 -----------------------------------------------------------------------------]]
 local types_tostring = {
   e = function(ent)
-    if IsValid(ent) then return '' end
+    if not IsValid(ent) then return '' end
 
     return ent:IsPlayer() and ent:Nick() or tostring(ent)
   end,
