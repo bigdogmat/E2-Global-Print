@@ -1,6 +1,6 @@
 -- The reason we're doing this here is because, for a client to load the
 -- client side state of an extension, they must allow their extensions to validate,
--- which also requires them to open their E2 editor, or past a E2.
+-- which also requires them to open their E2 editor, or past an E2.
 
 --[[---------------------------------------------------------------------------
 Just incase someone wants to spam messages
@@ -8,7 +8,7 @@ Just incase someone wants to spam messages
 local string_format = string.format
 local chat_AddText  = chat.AddText
 local unpack        = unpack
-local MsgN          = MsgN
+local MsgC          = MsgC
 local prefix        = Color(180, 180, 180)
 
 net.Receive("wire_expression2_custom_globalprint", function()
