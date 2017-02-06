@@ -18,6 +18,8 @@ Checks players permission
 -----------------------------------------------------------------------------]]
 local function check_permission(context)
   local ply = context.player
+
+  -- Player left and E2 is still running?
   if not IsValid(ply) then return false end
 
   local mode = permissions:GetInt()
@@ -42,6 +44,8 @@ local types_tostring = {
 
     return ent:IsPlayer() and ent:Nick() or tostring(ent)
   end,
+
+  -- Treat vectors as colors unless they're outside the range to be colors
   v = function(vec)
     for k, v in ipairs(vec) do
       if v < 0 or v > 255 then
@@ -52,15 +56,18 @@ local types_tostring = {
     return Color(vec[1], vec[2], vec[3])
   end,
 
+  -- Other vector types
+  xv2 = function(vec) return string.format("Vec (%d, %d)", vec[1], vec[2]) end,
+  xv4 = function(vec) return string.format("Vec (%d, %d, %d, %d)", vec[1], vec[2], vec[3], vec[4]) end,
+
   n = tostring,
   s = function(str) return str end,
-  xv4 = function(vec) return string.format("Vec (%d, %d, %d, %d)", vec[1], vec[2], vec[3], vec[4]) end,
 }
 
 --[[---------------------------------------------------------------------------
 Build a printable table from varargs
 -----------------------------------------------------------------------------]]
-local function build_print_from_VarArgs(typeids, ...)
+local function build_table_from_VarArgs(typeids, ...)
   local ret = {}
 
   for k, v in ipairs(typeids) do
@@ -87,10 +94,12 @@ local realtypes_tostring = {
       if not isnumber(k) then return '' end
       if not isnumber(v) then return '' end
 
-      if k < 1 and k > 4 then return '' end
+      if k < 1 or k > 4 then return '' end
     end
 
-    if #tab == 3 then
+    if #tab == 2 then
+      return types_tostring.xv2(tab)
+    elseif #tab == 3 then
       return types_tostring.v(tab)
     elseif #tab == 4 then
       return types_tostring.xv4(tab)
@@ -103,7 +112,7 @@ local realtypes_tostring = {
 --[[---------------------------------------------------------------------------
 Build a printable table from an array
 -----------------------------------------------------------------------------]]
-local function build_print_from_Array(arr)
+local function build_table_from_Array(arr)
   local ret = {}
 
   for k, v in ipairs(arr) do
@@ -122,7 +131,7 @@ Network the message
 -----------------------------------------------------------------------------]]
 util.AddNetworkString "wire_expression2_custom_globalprint"
 
-local function write_color_print(context, players, data)
+local function write_color_print(context, player, data)
   net.Start "wire_expression2_custom_globalprint"
     net.WriteUInt(#data, 8)
 
@@ -135,14 +144,19 @@ local function write_color_print(context, players, data)
     end
 
     net.WriteEntity(context.player)
-  net.Send(players and players or player.GetAll())
+
+  if player then
+    net.Send(player)
+  else
+    net.Broadcast()
+  end
 end
 
 --[[---------------------------------------------------------------------------
 Send a message using an array
 -----------------------------------------------------------------------------]]
 local function send_color_print_Array(context, ply, arr)
-  local data = build_print_from_Array(arr)
+  local data = build_table_from_Array(arr)
   write_color_print(context, ply, data)
 end
 
@@ -150,7 +164,7 @@ end
 Send a message using varargs
 -----------------------------------------------------------------------------]]
 local function send_color_print_VarArgs(context, ply, typeids, ...)
-  local data = build_print_from_VarArgs(typeids, ...)
+  local data = build_table_from_VarArgs(typeids, ...)
   write_color_print(context, ply, data)
 end
 
