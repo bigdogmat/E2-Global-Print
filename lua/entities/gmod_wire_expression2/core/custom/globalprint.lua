@@ -1,37 +1,26 @@
+include "autorun/globalprint_cami.lua"
+
 --[[---------------------------------------------------------------------------
 Global color printing!
 -----------------------------------------------------------------------------]]
 E2Lib.RegisterExtension("globalprint", false, "Allows players to print colored messages to the entire server", "This can be used to impersonate players, and or spam players.")
 
 --[[---------------------------------------------------------------------------
-Permissions
-0 = everyone,
-1 = admins,
-2 = superadmins,
-Default: 2
------------------------------------------------------------------------------]]
-local permissions = CreateConVar("globalprint_permissions", '2', bit.bor(FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE), "Set who can send global messages")
-
---[[---------------------------------------------------------------------------
 Checks players permission
 -----------------------------------------------------------------------------]]
+CAMI.RegisterPrivilege {
+  Name = "GlobalPrint",
+  MinAccess = "admin",
+  Description = "If you can print global chat messages",
+}
+
 local function check_permission(context)
   local ply = context.player
 
   -- Player left and E2 is still running?
   if not IsValid(ply) then return false end
 
-  local mode = permissions:GetInt()
-
-  if mode == 0 then
-    return true
-  elseif mode == 1 and ply:IsAdmin() then
-    return true
-  elseif mode == 2 and ply:IsSuperAdmin() then
-    return true
-  end
-
-  return false
+  return CAMI.PlayerHasAccess(ply, "GlobalPrint") == true
 end
 
 --[[---------------------------------------------------------------------------
