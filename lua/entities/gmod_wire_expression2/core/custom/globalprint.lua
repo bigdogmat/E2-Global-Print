@@ -8,7 +8,6 @@ Permissions
 0 = everyone,
 1 = admins,
 2 = superadmins,
-
 Default: 2
 -----------------------------------------------------------------------------]]
 local permissions = CreateConVar("globalprint_permissions", '2', bit.bor(FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE), "Set who can send global messages")
